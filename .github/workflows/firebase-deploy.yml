@@ -32,7 +32,7 @@ jobs:
 
       # 5. Build Flutter Web (html renderer — more compatible for CI)
       - name: Build Flutter Web
-        run: flutter build web --release --web-renderer html
+        run: flutter build web --release
 
       # 6. Install Firebase CLI
       - name: Install Firebase CLI

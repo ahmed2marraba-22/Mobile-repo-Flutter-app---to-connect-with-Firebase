@@ -12,7 +12,8 @@ dependencies:
 
   # --- local persistence (offline-first) ---
   drift: ^2.22.1
-  sqlite3_flutter_libs: ^0.5.24
+  sqlite3_flutter_libs: ^0.5.24   # mobile/desktop only — web uses drift web worker
+  sqflite: ^2.3.3+1               # fallback for web via sqflite_common_ffi_web
   path: ^1.9.0
   path_provider: ^2.1.5
   flutter_secure_storage: ^9.2.2

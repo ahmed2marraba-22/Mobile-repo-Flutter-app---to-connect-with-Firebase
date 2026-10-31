@@ -15,27 +15,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Flutter
+      # 2. Setup Flutter (stable channel, any version)
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
 
-      # 3. Install dependencies
+      # 3. Enable Flutter Web
+      - name: Enable Flutter Web
+        run: flutter config --enable-web
+
+      # 4. Get dependencies
       - name: Install Flutter dependencies
         run: flutter pub get
 
-      # 4. Build Flutter Web
+      # 5. Build Flutter Web (html renderer — more compatible for CI)
       - name: Build Flutter Web
-        run: flutter build web --release --web-renderer canvaskit
+        run: flutter build web --release --web-renderer html
 
-      # 5. Deploy to Firebase Hosting using CI Token
+      # 6. Install Firebase CLI
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # 7. Deploy to Firebase Hosting
       - name: Deploy to Firebase Hosting
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting --project geoflowflutter
+        run: firebase deploy --only hosting --project geoflowflutter --token "$FIREBASE_TOKEN"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

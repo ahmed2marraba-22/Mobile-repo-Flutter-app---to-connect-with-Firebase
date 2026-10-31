@@ -4,17 +4,14 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build_and_deploy:
-    name: Build & Deploy
+    name: Build & Deploy to Firebase
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -26,19 +23,19 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 3. Get Flutter dependencies
-      - name: Install dependencies
+      # 3. Install dependencies
+      - name: Install Flutter dependencies
         run: flutter pub get
 
-      # 4. Build Flutter Web (CanvasKit for best rendering)
+      # 4. Build Flutter Web
       - name: Build Flutter Web
         run: flutter build web --release --web-renderer canvaskit
 
-      # 5. Deploy to Firebase Hosting
+      # 5. Deploy to Firebase Hosting using CI Token
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: w9jds/firebase-action@master
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          args: deploy --only hosting --project geoflowflutter
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,46 @@
+name: geoflow_field
+publish_to: "none"
+description: GeoFlow production offline-first field application
+version: 1.2.0+2
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # --- local persistence (offline-first) ---
+  drift: ^2.22.1
+  sqlite3_flutter_libs: ^0.5.24
+  path: ^1.9.0
+  path_provider: ^2.1.5
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.2
+
+  # --- identity / ids ---
+  uuid: ^4.5.1
+
+  # --- networking ---
+  http: ^1.2.2
+  connectivity_plus: ^6.0.5
+
+  # --- state management ---
+  provider: ^6.1.2
+
+  # --- maps (offline-capable tiles) ---
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
+  # --- formatting ---
+  intl: ^0.20.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  drift_dev: ^2.22.1
+  build_runner: ^2.4.13
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

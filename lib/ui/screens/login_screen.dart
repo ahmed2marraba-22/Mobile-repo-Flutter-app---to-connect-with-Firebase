@@ -11,8 +11,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _username = TextEditingController();
-  final _password = TextEditingController();
+  final _username = TextEditingController(text: 'demo');
+  final _password = TextEditingController(text: 'demo123');
   final _server = TextEditingController();
   bool _showServer = false;
   bool _busy = false;
@@ -36,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _busy = false);
   }
 
+  /// Demo login — fills credentials and signs in immediately without server
+  Future<void> _demoLogin() async {
+    _username.text = 'demo';
+    _password.text = 'demo123';
+    await _submit();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -57,11 +64,82 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'استوب سازوك — دخول الموظف الميداني',
+                  'دخول الموظف الميداني',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
                 ),
                 const SizedBox(height: 32),
+
+                // ── Demo quick-entry banner ──
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primaryContainer,
+                        theme.colorScheme.secondaryContainer,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(14),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: _busy ? null : _demoLogin,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary.withOpacity(0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.play_circle_outline,
+                                  color: theme.colorScheme.primary, size: 22),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('دخول تجريبي فوري',
+                                      style: theme.textTheme.labelLarge?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text('اضغط هنا للدخول بدون سيرفر',
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSecondaryContainer,
+                                      )),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.arrow_forward_ios,
+                                size: 14, color: theme.colorScheme.primary),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // ── Divider ──
+                Row(children: [
+                  const Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('أو أدخل بيانات السيرفر',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.outline)),
+                  ),
+                  const Expanded(child: Divider()),
+                ]),
+                const SizedBox(height: 16),
+
                 TextField(
                   controller: _username,
                   decoration: const InputDecoration(
@@ -97,10 +175,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 if (state.lastError != null) ...[
                   const SizedBox(height: 8),
-                  MaterialBanner(
-                    content: Text(state.lastError!),
-                    backgroundColor: theme.colorScheme.errorContainer,
-                    actions: const [SizedBox.shrink()],
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.errorContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline,
+                            color: theme.colorScheme.error, size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(state.lastError!,
+                              style: TextStyle(color: theme.colorScheme.onErrorContainer)),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
                 const SizedBox(height: 16),
@@ -114,51 +205,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       : const Icon(Icons.login),
                   label: Text(_busy ? 'جاري الدخول…' : 'تسجيل الدخول'),
-                ),
-                const SizedBox(height: 24),
-                // ── Demo Mode hint ──
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.info_outline, size: 16, color: theme.colorScheme.primary),
-                          const SizedBox(width: 6),
-                          Text('وضع تجريبي', style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          )),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('اسم المستخدم:', style: theme.textTheme.bodySmall),
-                          SelectableText('demo', style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'monospace',
-                          )),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('كلمة المرور:', style: theme.textTheme.bodySmall),
-                          SelectableText('demo123', style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'monospace',
-                          )),
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),

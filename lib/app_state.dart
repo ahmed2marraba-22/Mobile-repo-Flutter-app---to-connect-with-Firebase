@@ -37,6 +37,11 @@ class AppState extends ChangeNotifier {
   static const _kDevice = 'geoflow.deviceId';
   static const defaultServer = 'http://127.0.0.1:3000';
 
+  // ---- Demo Mode ----
+  static const _demoUser = 'demo';
+  static const _demoPass = 'demo123';
+  bool get isDemoMode => sessionUserId == '__demo__';
+
   // wiring
   String serverUrl = defaultServer;
   late String deviceId;
@@ -125,6 +130,16 @@ class AppState extends ChangeNotifier {
   Future<void> signIn(String username, String password) async {
     lastError = null;
     notifyListeners();
+
+    // ── Demo Mode: bypass server entirely ──
+    if (username.trim().toLowerCase() == _demoUser && password == _demoPass) {
+      sessionUserId = '__demo__';
+      sessionDisplayName = 'مستخدم تجريبي';
+      lastError = null;
+      notifyListeners();
+      return;
+    }
+
     try {
       final session = await _auth!.signIn(username, password);
       sessionUserId = session.userId;

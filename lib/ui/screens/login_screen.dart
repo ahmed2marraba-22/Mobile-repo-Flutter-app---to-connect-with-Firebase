@@ -115,6 +115,51 @@ class _LoginScreenState extends State<LoginScreen> {
                       : const Icon(Icons.login),
                   label: Text(_busy ? 'جاري الدخول…' : 'تسجيل الدخول'),
                 ),
+                const SizedBox(height: 24),
+                // ── Demo Mode hint ──
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, size: 16, color: theme.colorScheme.primary),
+                          const SizedBox(width: 6),
+                          Text('وضع تجريبي', style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('اسم المستخدم:', style: theme.textTheme.bodySmall),
+                          SelectableText('demo', style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'monospace',
+                          )),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('كلمة المرور:', style: theme.textTheme.bodySmall),
+                          SelectableText('demo123', style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'monospace',
+                          )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
